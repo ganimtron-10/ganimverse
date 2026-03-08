@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arcade Hub</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #0a0a0a;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        #canvas-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* CRT Scanline Effect Overlay */
+        .crt-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 4px, 3px 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .vignette {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.5);
+            pointer-events: none;
+            z-index: 11;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="crt-overlay"></div>
+    <div class="vignette"></div>
+    <div id="canvas-container"></div>
+
+    <script>
+        /** * EDIT THIS JSON TO ADD/REMOVE GAMES
+         * title: String
+         * icon: Emoji or single character
+         * color: Hex color for the theme
+         * path: Destination URL
+         * disabled: Boolean (Optional) - If true, the card is not selectable
+         */
+        let gameData = [
+            { "title": "SPACE EXPLORER", "icon": "🚀", "color": "#9370DB", "path": "/space-explorer" },
+            { "title": "COMING SOON", "icon": "🔒", "color": "#444444", "path": "#", "disabled": true }
+        ];
+
+        let selectedIndex = 0;
+        let cols = 3;
+        let padding = 20;
+        let cardW, cardH;
+        let flicker = 0;
+
+        let scrollPos = 0;
+        let targetScroll = 0;
+        let gridStartY = 140;
+
+        function setup() {
+            let canvas = createCanvas(windowWidth, windowHeight);
+            canvas.parent('canvas-container');
+            calculateGrid();
+            textAlign(CENTER, CENTER);
+            noSmooth();
+        }
+
+        function calculateGrid() {
+            if (width < 600) {
+                cols = 1;
+            } else if (width < 900) {
+                cols = 2;
+            } else {
+                cols = 3;
+            }
+
+            cardW = (min(width, 1000) - (padding * (cols + 1))) / cols;
+            cardH = cardW * 0.8;
+            if (cardH > 250) cardH = 250;
+        }
+
+        function draw() {
+            background(10, 10, 20);
+
+            scrollPos = lerp(scrollPos, targetScroll, 0.15);
+
+            drawGrid();
+            drawHeader();
+            drawFooter();
+
+            flicker = lerp(flicker, random(0, 10), 0.1);
+            ensureSelectionVisible();
+        }
+
+        function drawGrid() {
+            push();
+            translate(0, -scrollPos);
+            let startX = (width - (cols * cardW + (cols - 1) * padding)) / 2;
+
+            for (let i = 0; i < gameData.length; i++) {
+                let c = i % cols;
+                let r = Math.floor(i / cols);
+                let x = startX + c * (cardW + padding);
+                let y = gridStartY + r * (cardH + padding);
+
+                if (y - scrollPos > -cardH && y - scrollPos < height + cardH) {
+                    drawGameCard(x, y, i);
+                }
+            }
+            pop();
+        }
+
+        function ensureSelectionVisible() {
+            let r = Math.floor(selectedIndex / cols);
+            let yTop = gridStartY + r * (cardH + padding);
+            let yBottom = yTop + cardH;
+
+            if (yTop < scrollPos + gridStartY) {
+                targetScroll = yTop - gridStartY;
+            } else if (yBottom > scrollPos + height - 120) {
+                targetScroll = yBottom - (height - 120);
+            }
+        }
+
+        function drawHeader() {
+            noStroke();
+            fill(10, 10, 20);
+            rect(0, 0, width, gridStartY - 5);
+
+            for (let i = 0; i < 15; i++) {
+                fill(10, 10, 20, (15 - i) * 10);
+                rect(0, gridStartY - 5 + i, width, 1);
+            }
+
+            fill(255);
+            textSize(width < 600 ? 24 : 42);
+            textStyle(BOLD);
+            drawingContext.shadowBlur = 15;
+            drawingContext.shadowColor = 'rgba(255, 255, 255, 0.5)';
+            text("GAME SELECTION", width / 2, 60);
+            drawingContext.shadowBlur = 0;
+
+            fill(200, 200, 255, 150 + flicker);
+            textSize(14);
+            text("SPEND TIME TO START", width / 2, 100);
+
+            stroke(255, 50);
+            line(width * 0.2, 120, width * 0.8, 120);
+            noStroke();
+        }
+
+        function drawGameCard(x, y, index) {
+            let game = gameData[index];
+            let isSelected = (index === selectedIndex);
+            let isDisabled = game.disabled === true;
+
+            push();
+            translate(x, y);
+
+            if (isSelected && !isDisabled) {
+                let offset = sin(frameCount * 0.1) * 5;
+                translate(0, offset);
+                fill(game.color + '33');
+                rect(-5, -5, cardW + 10, cardH + 10, 8);
+                stroke(255);
+                strokeWeight(3);
+            } else {
+                stroke(isDisabled ? 30 : 50);
+                strokeWeight(1);
+            }
+
+            // Card Body
+            fill(isDisabled ? 15 : 20, isDisabled ? 15 : 20, isDisabled ? 25 : 35);
+            rect(0, 0, cardW, cardH, 5);
+
+            // Icon Area
+            noStroke();
+            if (isDisabled) {
+                fill(30);
+                // Draw a simple diagonal hatch pattern for "disabled" look
+                stroke(40);
+                for (let i = 0; i < cardW - 20; i += 10) {
+                    line(10 + i, 10, 10 + i + 10, cardH * 0.5 + 10);
+                }
+                noStroke();
+            } else {
+                fill(isSelected ? game.color : '#333');
+            }
+            rect(10, 10, cardW - 20, cardH * 0.5, 3);
+
+            // Icon
+            if (isDisabled) drawingContext.filter = 'grayscale(1) opacity(0.5)';
+            textSize(cardH * 0.25);
+            text(game.icon, cardW / 2, cardH * 0.32);
+            drawingContext.filter = 'none';
+
+            // Title
+            fill(isDisabled ? 70 : (isSelected ? 255 : 150));
+            textSize(max(11, cardW * 0.075));
+            text(game.title, cardW / 2, cardH * 0.75);
+
+            if (isSelected && !isDisabled) {
+                fill(255, 180 + sin(frameCount * 0.2) * 75);
+                textSize(10);
+                text("▶ START MISSION", cardW / 2, cardH * 0.9);
+            } else if (isDisabled) {
+                fill(60);
+                textSize(9);
+                text("LOCKED", cardW / 2, cardH * 0.9);
+            }
+
+            pop();
+        }
+
+        function drawFooter() {
+            noStroke();
+            fill(10, 10, 20);
+            rect(0, height - 60, width, 60);
+
+            for (let i = 0; i < 15; i++) {
+                fill(10, 10, 20, (15 - i) * 10);
+                rect(0, height - 60 - i, width, 1);
+            }
+
+            fill(100);
+            textSize(12);
+            let instructions = width < 600 ? "TAP TO SELECT • SCROLL TO EXPLORE" : "ARROWS TO NAVIGATE • MOUSE WHEEL TO SCROLL";
+            text(instructions, width / 2, height - 30);
+        }
+
+        function mouseWheel(event) {
+            targetScroll += event.delta;
+            let totalRows = Math.ceil(gameData.length / cols);
+            let maxScroll = max(0, (gridStartY + totalRows * (cardH + padding)) - (height - 80));
+            targetScroll = constrain(targetScroll, 0, maxScroll);
+        }
+
+        // Helper to find the next/prev valid (non-disabled) index
+        function getNextValidIndex(current, step) {
+            let next = (current + step + gameData.length) % gameData.length;
+            // Limit attempts to avoid infinite loop if all are disabled
+            for (let i = 0; i < gameData.length; i++) {
+                if (!gameData[next].disabled) return next;
+                next = (next + step + gameData.length) % gameData.length;
+            }
+            return current;
+        }
+
+        function keyPressed() {
+            if (keyCode === RIGHT_ARROW) {
+                selectedIndex = getNextValidIndex(selectedIndex, 1);
+            } else if (keyCode === LEFT_ARROW) {
+                selectedIndex = getNextValidIndex(selectedIndex, -1);
+            } else if (keyCode === DOWN_ARROW) {
+                // For vertical jumps, we try to find the next valid in that direction
+                let target = selectedIndex + cols;
+                if (target < gameData.length && !gameData[target].disabled) {
+                    selectedIndex = target;
+                } else {
+                    // Fallback to searching forward
+                    selectedIndex = getNextValidIndex(selectedIndex, 1);
+                }
+            } else if (keyCode === UP_ARROW) {
+                let target = selectedIndex - cols;
+                if (target >= 0 && !gameData[target].disabled) {
+                    selectedIndex = target;
+                } else {
+                    // Fallback to searching backward
+                    selectedIndex = getNextValidIndex(selectedIndex, -1);
+                }
+            } else if (keyCode === ENTER) {
+                launchGame();
+            }
+        }
+
+        function mousePressed() {
+            let startX = (width - (cols * cardW + (cols - 1) * padding)) / 2;
+
+            for (let i = 0; i < gameData.length; i++) {
+                let c = i % cols;
+                let r = Math.floor(i / cols);
+                let x = startX + c * (cardW + padding);
+                let y = gridStartY + r * (cardH + padding);
+
+                if (mouseX > x && mouseX < x + cardW &&
+                    mouseY > (y - scrollPos) && mouseY < (y + cardH - scrollPos)) {
+                    if (!gameData[i].disabled) {
+                        if (selectedIndex === i) {
+                            launchGame();
+                        } else {
+                            selectedIndex = i;
+                        }
+                    }
+                }
+            }
+        }
+
+        function launchGame() {
+            let game = gameData[selectedIndex];
+            if (game.disabled) return; // Guard clause
+
+            document.body.style.transition = "filter 0.5s ease-out";
+            document.body.style.filter = "brightness(5)";
+
+            setTimeout(() => {
+                console.log("Redirecting to: " + game.path);
+                window.location.href = game.path;
+                // alert("LAUNCHING: " + game.title);
+                document.body.style.filter = "none";
+            }, 300);
+        }
+
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+            calculateGrid();
+        }
+    </script>
+</body>
+
+</html>
