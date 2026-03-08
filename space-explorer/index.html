@@ -119,7 +119,6 @@
             justify-content: space-between;
         }
 
-        /* Tactical State Colors */
         .craft-card.unaffordable {
             opacity: 0.4;
             border-color: #222;
@@ -474,7 +473,7 @@
             { name: "Builder @ iodump", type: "exp", x: 2000, y: 1800, color: '#e67e22', size: 150, meta: "Tech Lead | 2021-2024", content: "Led team of 20. Built CTF platforms and community events.", link: "https://example.com" },
             { name: "Backend @ Zenskar", type: "exp", x: 4500, y: -2500, color: '#2ecc71', size: 170, meta: "FinTech | Jan 2023", content: "Integration development for SaaS billing. Optimized test suites.", link: "https://zenskar.com" },
             { name: "DevOps @ PTC", type: "exp", x: 9000, y: -6000, color: '#3498db', size: 200, meta: "DevOps Engineer | July 2023 - Present", content: "Automated Azure pipelines and Salesforce deployments.", link: "https://ptc.com" },
-            { name: "TriFS", type: "proj", x: 12000, y: 10000, color: '#8e44ad', size: 160, req: 'distributed', cost: 50, meta: "Distributed FS", content: "High-performance DFS for tiny files in Go.", link: "https://github.com" }
+            { name: "TriFS", type: "proj", x: 12000, y: 10000, color: '#8e44ad', size: 160, req: 'distributed', cost: 50, meta: "Distributed FS", content: "High-performance Distributed File System in Go. Manages massive volumes of tiny files with distributed metadata service, data packing, and erasure coding.", link: "https://github.com" }
         ];
 
         // --- TUTORIAL CONTENT ---
@@ -564,7 +563,6 @@
             }
             drawRadar();
             if (joystick.active) drawJoystick();
-            // REMOVED updateCraftingUI() from draw loop to fix click selection
         }
 
         function drawGrid() {
@@ -577,18 +575,23 @@
         }
 
         function drawJoystick() {
-            noStroke(); fill(255, 30); ellipse(joystick.base.x, joystick.base.y, 120);
-            fill(0, 255, 204, 100); ellipse(joystick.current.x, joystick.current.y, 50);
+            noStroke();
+            fill(255, 30);
+            ellipse(joystick.base.x, joystick.base.y, 120);
+            fill(0, 255, 204, 100);
+            ellipse(joystick.current.x, joystick.current.y, 50);
         }
 
         function touchStarted() {
-            if (isCrafting || isTutorial || isDocked) return;
+            if (isCrafting || isTutorial || isDocked) return; // DON'T BLOCK IF PAUSED, but buttons are HTML anyway
+
+            // Only trigger joystick on left half, and ensure we aren't clicking an HTML button
             if (mouseX < width / 2) {
                 joystick.active = true;
                 joystick.base.set(mouseX, mouseY);
                 joystick.current.set(mouseX, mouseY);
+                return false; // Prevent default only for joystick
             }
-            return false;
         }
 
         function touchMoved() {
@@ -598,11 +601,17 @@
                 if (diff.mag() > 50) diff.setMag(50);
                 joystick.vec = diff.copy().div(50);
                 joystick.current = p5.Vector.add(joystick.base, diff);
+                return false;
             }
-            return false;
         }
 
-        function touchEnded() { joystick.active = false; joystick.vec.set(0, 0); return false; }
+        function touchEnded() {
+            if (joystick.active) {
+                joystick.active = false;
+                joystick.vec.set(0, 0);
+                return false;
+            }
+        }
 
         function triggerRestore() { if (dockedPlanet && !dockedPlanet.repaired) dockedPlanet.restore(); }
         function openTutorial() { tutorialStep = 0; isTutorial = true; document.getElementById('tutorial-panel').style.display = 'block'; document.getElementById('pause-overlay').style.display = 'block'; updateTutorial(); }
@@ -645,7 +654,6 @@
             if (keyCode === ESCAPE && isDocked) toggleDocking();
         }
 
-        // ATTACH TO WINDOW FOR DOM ONCLICK
         window.compileSkill = function (id, section) {
             let list = SKILL_DATA[section], skill = list.find(s => s.id === id);
             const canAfford = ship.res.logic >= (skill.cost.L || 0) && ship.res.syntax >= (skill.cost.S || 0) && ship.res.arch >= (skill.cost.A || 0);
@@ -664,6 +672,15 @@
                 if (keyIsDown(RIGHT_ARROW) || keyIsDown(68)) this.angle += 0.08;
                 if (keyIsDown(UP_ARROW) || keyIsDown(87)) { let f = p5.Vector.fromAngle(this.angle).mult(0.4); this.acc.add(f); }
                 if (joystick.active && joystick.vec.mag() > 0.1) { this.angle = joystick.vec.heading(); let f = joystick.vec.copy().mult(0.5); this.acc.add(f); }
+
+                // --- ROCKET THRUST PARTICLES ---
+                if (this.acc.mag() > 0.01) {
+                    for (let i = 0; i < 2; i++) {
+                        let p = particlePool.find(p => !p.active);
+                        if (p) p.spawn(this.pos.x - cos(this.angle) * 15, this.pos.y - sin(this.angle) * 15, '#00ffff', random(1, 3));
+                    }
+                }
+
                 this.vel.add(this.acc).mult(0.96); this.pos.add(this.vel); this.acc.mult(0);
                 dockedPlanet = null;
                 for (let p of planets) { if (dist(this.pos.x, this.pos.y, p.pos.x, p.pos.y) < 300) { dockedPlanet = p; break; } }
@@ -722,45 +739,29 @@
         class Particle { constructor() { this.active = false; this.pos = createVector(0, 0); this.vel = createVector(0, 0); } spawn(x, y, color, speed) { this.pos.set(x, y); this.vel = p5.Vector.random2D().mult(speed); this.color = color; this.life = 255; this.active = true; } update() { this.pos.add(this.vel); this.life -= 12; if (this.life <= 0) this.active = false; } display() { let c = color(this.color); c.setAlpha(this.life); fill(c); noStroke(); ellipse(this.pos.x, this.pos.y, 4); } }
         function spawnExplosion(x, y, color, count) { for (let i = 0; i < count; i++) { let p = particlePool.find(p => !p.active); if (p) p.spawn(x, y, color, random(1, 8)); } }
         function logMsg(m) { const logContainer = document.getElementById('message-log'), entry = document.createElement('div'); entry.className = 'log-entry'; entry.innerText = `> ${m}`; logContainer.appendChild(entry); while (logContainer.childNodes.length > 4) logContainer.removeChild(logContainer.firstChild); setTimeout(() => { if (entry.parentNode === logContainer) logContainer.removeChild(entry); }, 5000); }
-
-        function toggleCrafting() {
-            isCrafting = !isCrafting;
-            const sidebar = document.getElementById('crafting-sidebar'), overlay = document.getElementById('pause-overlay'), compass = document.getElementById('objective-compass');
-            if (isCrafting) { sidebar.classList.add('active'); overlay.style.display = 'block'; compass.classList.add('pushed'); updateCraftingUI(); }
-            else { sidebar.classList.remove('active'); overlay.style.display = 'none'; compass.classList.remove('pushed'); saveGame(); }
-        }
-
-        function updateUI() {
-            document.getElementById('res-logic').innerText = ship.res.logic;
-            document.getElementById('res-syntax').innerText = ship.res.syntax;
-            document.getElementById('res-arch').innerText = ship.res.arch;
-            let container = document.getElementById('skills-container');
-            container.innerHTML = '';
-            ship.skills.forEach(s => { let span = document.createElement('span'); span.className = 'skill-tag'; span.innerText = s.id.toUpperCase(); span.style.borderLeft = `2px solid ${s.color}`; container.appendChild(span); });
-            let bc = document.getElementById('buffs-container');
-            bc.innerHTML = '';
-            if (ship.buffs.magnet > 0) bc.innerHTML += `<div class="buff-timer">MAGNET: ${Math.ceil(ship.buffs.magnet / 60)}s</div>`;
-            if (ship.buffs.firewall > 0) bc.innerHTML += `<div class="buff-timer">SHIELD: ${Math.ceil(ship.buffs.firewall / 60)}s</div>`;
-        }
-
+        function toggleCrafting() { isCrafting = !isCrafting; const sidebar = document.getElementById('crafting-sidebar'), overlay = document.getElementById('pause-overlay'), compass = document.getElementById('objective-compass'); if (isCrafting) { sidebar.classList.add('active'); overlay.style.display = 'block'; compass.classList.add('pushed'); updateCraftingUI(); } else { sidebar.classList.remove('active'); overlay.style.display = 'none'; compass.classList.remove('pushed'); saveGame(); } }
+        function updateUI() { document.getElementById('res-logic').innerText = ship.res.logic; document.getElementById('res-syntax').innerText = ship.res.syntax; document.getElementById('res-arch').innerText = ship.res.arch; let container = document.getElementById('skills-container'); container.innerHTML = ''; ship.skills.forEach(s => { let span = document.createElement('span'); span.className = 'skill-tag'; span.innerText = s.id.toUpperCase(); span.style.borderLeft = `2px solid ${s.color}`; container.appendChild(span); }); let bc = document.getElementById('buffs-container'); bc.innerHTML = ''; if (ship.buffs.magnet > 0) bc.innerHTML += `<div class="buff-timer">MAGNET: ${Math.ceil(ship.buffs.magnet / 60)}s</div>`; if (ship.buffs.firewall > 0) bc.innerHTML += `<div class="buff-timer">SHIELD: ${Math.ceil(ship.buffs.firewall / 60)}s</div>`; }
         function saveGame() { localStorage.setItem(SAVE_KEY, JSON.stringify({ res: ship.res, skills: ship.skills.map(s => s.id), planets: planets.map(p => p.repaired), pos: { x: ship.pos.x, y: ship.pos.y } })); const el = document.getElementById('save-indicator'); el.style.opacity = 1; setTimeout(() => el.style.opacity = 0, 1000); }
         function loadGame() { const raw = localStorage.getItem(SAVE_KEY); if (raw) { try { const data = JSON.parse(raw); ship.res = data.res; ship.pos.set(data.pos.x, data.pos.y); data.skills.forEach(sid => { for (let cat in SKILL_DATA) { let s = SKILL_DATA[cat].find(x => x.id === sid); if (s) ship.skills.push(s); } }); data.planets.forEach((rep, i) => { if (planets[i]) planets[i].repaired = rep; }); updateUI(); } catch (e) { } } }
+        function updateCraftingUI() { let html = ''; for (let section in SKILL_DATA) { html += `<div class="section-label">${section}</div><div class="craft-grid">`; SKILL_DATA[section].forEach(s => { let owned = s.once && ship.skills.some(sk => sk.id === s.id), locked = s.req && !ship.skills.some(sk => sk.id === s.req), canAfford = ship.res.logic >= (s.cost.L || 0) && ship.res.syntax >= (s.cost.S || 0) && ship.res.arch >= (s.cost.A || 0); html += `<div class="craft-card ${locked ? 'locked' : ''} ${owned ? 'owned' : ''} ${(!canAfford && !owned && !locked) ? 'unaffordable' : ''}" onclick="window.compileSkill('${s.id}', '${section}')"><div class="card-title" style="color:${s.color}">${s.name}</div><div class="card-costs"><span class="cost-tag" style="background:#ff336622; color:#ff3366">${s.cost.L}L</span><span class="cost-tag" style="background:#00ffaa22; color:#00ffaa">${s.cost.S}S</span><span class="cost-tag" style="background:#00ccff22; color:#00ccff">${s.cost.A}A</span></div></div>`; }); html += `</div>`; } document.getElementById('craft-options').innerHTML = html; }
+        function updateCompass() { let closest = null, minDist = Infinity; for (let p of planets) { let d = dist(ship.pos.x, ship.pos.y, p.pos.x, p.pos.y); if (d < minDist) { minDist = d; closest = p; } } if (closest) { document.getElementById('target-dist').innerText = floor(minDist) + "m"; document.getElementById('target-name').innerText = closest.name.toUpperCase(); document.getElementById('target-name').style.color = closest.repaired ? closest.color : '#666'; } }
 
-        function updateCraftingUI() {
-            let html = '';
-            for (let section in SKILL_DATA) {
-                html += `<div class="section-label">${section}</div><div class="craft-grid">`;
-                SKILL_DATA[section].forEach(s => {
-                    let owned = s.once && ship.skills.some(sk => sk.id === s.id), locked = s.req && !ship.skills.some(sk => sk.id === s.req);
-                    let canAfford = ship.res.logic >= (s.cost.L || 0) && ship.res.syntax >= (s.cost.S || 0) && ship.res.arch >= (s.cost.A || 0);
-                    // Inline onclick string points to global function
-                    html += `<div class="craft-card ${locked ? 'locked' : ''} ${owned ? 'owned' : ''} ${(!canAfford && !owned && !locked) ? 'unaffordable' : ''}" onclick="window.compileSkill('${s.id}', '${section}')"><div class="card-title" style="color:${s.color}">${s.name}</div><div class="card-costs"><span class="cost-tag" style="background:#ff336622; color:#ff3366">${s.cost.L}L</span><span class="cost-tag" style="background:#00ffaa22; color:#00ffaa">${s.cost.S}S</span><span class="cost-tag" style="background:#00ccff22; color:#00ccff">${s.cost.A}A</span></div></div>`;
-                }); html += `</div>`;
-            } document.getElementById('craft-options').innerHTML = html;
+        function drawRadar() {
+            let pad = 15;
+            // Fixed Radar Positioning for Mobile
+            let bottomOffset = (windowWidth < 800) ? 170 : pad;
+            push();
+            translate(width - RADAR_SIZE - pad, height - RADAR_SIZE - bottomOffset);
+            fill(0, 20, 20, 220);
+            stroke(0, 255, 200, 100);
+            rect(0, 0, RADAR_SIZE, RADAR_SIZE);
+            let cx = RADAR_SIZE / 2, cy = RADAR_SIZE / 2;
+            planets.forEach(p => { let dx = (p.pos.x - ship.pos.x) * RADAR_SCALE, dy = (p.pos.y - ship.pos.y) * RADAR_SCALE; if (abs(dx) < RADAR_SIZE / 2 && abs(dy) < RADAR_SIZE / 2) { if (p.repaired) { fill(p.color); noStroke(); ellipse(cx + dx, cy + dy, 6); } else { noFill(); stroke(100); ellipse(cx + dx, cy + dy, 5); } } });
+            orbPool.forEach(o => { if (o.active) { let dx = (o.pos.x - ship.pos.x) * RADAR_SCALE, dy = (o.pos.y - ship.pos.y) * RADAR_SCALE; if (abs(dx) < RADAR_SIZE / 2 && abs(dy) < RADAR_SIZE / 2) { fill(o.color); noStroke(); ellipse(cx + dx, cy + dy, 2); } } });
+            enemyPool.forEach(e => { if (e.active) { let dx = (e.pos.x - ship.pos.x) * RADAR_SCALE, dy = (e.pos.y - ship.pos.y) * RADAR_SCALE; if (abs(dx) < RADAR_SIZE / 2 && abs(dy) < RADAR_SIZE / 2) { fill(e.faction.color); noStroke(); ellipse(cx + dx, cy + dy, 3); } } });
+            fill(255); noStroke(); ellipse(cx, cy, 4); pop();
         }
 
-        function updateCompass() { let closest = null, minDist = Infinity; for (let p of planets) { let d = dist(ship.pos.x, ship.pos.y, p.pos.x, p.pos.y); if (d < minDist) { minDist = d; closest = p; } } if (closest) { document.getElementById('target-dist').innerText = floor(minDist) + "m"; document.getElementById('target-name').innerText = closest.name.toUpperCase(); document.getElementById('target-name').style.color = closest.repaired ? closest.color : '#666'; } }
-        function drawRadar() { let pad = 15; push(); translate(width - RADAR_SIZE - pad, height - RADAR_SIZE - (windowWidth < 800 ? 180 : pad)); fill(0, 20, 20, 220); stroke(0, 255, 200, 100); rect(0, 0, RADAR_SIZE, RADAR_SIZE); let cx = RADAR_SIZE / 2, cy = RADAR_SIZE / 2; planets.forEach(p => { let dx = (p.pos.x - ship.pos.x) * RADAR_SCALE, dy = (p.pos.y - ship.pos.y) * RADAR_SCALE; if (abs(dx) < RADAR_SIZE / 2 && abs(dy) < RADAR_SIZE / 2) { if (p.repaired) { fill(p.color); noStroke(); ellipse(cx + dx, cy + dy, 6); } else { noFill(); stroke(100); ellipse(cx + dx, cy + dy, 5); } } }); orbPool.forEach(o => { if (o.active) { let dx = (o.pos.x - ship.pos.x) * RADAR_SCALE, dy = (o.pos.y - ship.pos.y) * RADAR_SCALE; if (abs(dx) < RADAR_SIZE / 2 && abs(dy) < RADAR_SIZE / 2) { fill(o.color); noStroke(); ellipse(cx + dx, cy + dy, 2); } } }); enemyPool.forEach(e => { if (e.active) { let dx = (e.pos.x - ship.pos.x) * RADAR_SCALE, dy = (e.pos.y - ship.pos.y) * RADAR_SCALE; if (abs(dx) < RADAR_SIZE / 2 && abs(dy) < RADAR_SIZE / 2) { fill(e.faction.color); noStroke(); ellipse(cx + dx, cy + dy, 3); } } }); fill(255); noStroke(); ellipse(cx, cy, 4); pop(); }
         function handleSpawns() { if (frameCount % 300 === 0) { let e = enemyPool.find(e => !e.active); if (e) { let s = floor(random(4)), x, y; if (s === 0) { x = ship.pos.x - width; y = ship.pos.y + random(-height, height); } else if (s === 1) { x = ship.pos.x + width; y = ship.pos.y + random(-height, height); } else if (s === 2) { x = ship.pos.x + random(-width, width); y = ship.pos.y - height; } else { x = ship.pos.x + random(-width, width); y = ship.pos.y + height; } e.spawn(x, y); } } }
         function windowResized() { resizeCanvas(windowWidth, windowHeight); if (windowWidth < 800) document.getElementById('mobile-controls').style.display = 'block'; else document.getElementById('mobile-controls').style.display = 'none'; }
     </script>
