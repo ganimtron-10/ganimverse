@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Architect Portfolio: Praneeth's Universe</title>
+    <title>ganimtron's Universe</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
     <style>
         body {
@@ -436,7 +436,7 @@
     </div>
 
     <script>
-        // --- GLOBAL CONFIGS & POOLS ---
+        // --- CONFIG & POOLS ---
         const MAX_ORBS = 200, MAX_ENEMIES = 10, SPAWN_RANGE = 9000, RADAR_SIZE = 160, RADAR_SCALE = 0.02;
         const SAVE_KEY = 'praneeth_universe_v7_stable';
 
@@ -450,11 +450,12 @@
             INFRA: [
                 { id: 'docker', name: 'Docker Hub', req: 'python', cost: { L: 10, S: 10, A: 15 }, color: '#2496ed', once: true },
                 { id: 'k8s', name: 'Kubernetes', req: 'docker', cost: { L: 25, S: 25, A: 40 }, color: '#326ce5', once: true },
-                { id: 'azure', name: 'Azure Pipelines', req: 'python', cost: { L: 15, S: 10, A: 20 }, color: '#0089d6', once: true }
+                { id: 'azure', name: 'Azure Pipelines', req: 'python', cost: { L: 15, S: 10, A: 20 }, color: '#0089d6', once: true },
+                { id: 'distributed', name: 'Dist. Logic', req: 'go', cost: { L: 20, S: 20, A: 20 }, color: '#8e44ad', once: true }
             ],
             DATABASE: [
                 { id: 'mysql', name: 'MySQL / SQLA', req: 'go', cost: { L: 10, S: 10, A: 10 }, color: '#4479a1', once: true },
-                { id: 'redis', name: 'Redis / Cache', req: 'go', cost: { L: 12, S: 8, A: 10 }, color: '#d82c20', once: true }
+                { id: 'redis', name: 'Redis Cache', req: 'go', cost: { L: 12, S: 8, A: 10 }, color: '#d82c20', once: true }
             ],
             OPERATIONS: [
                 { id: 'magnet', name: 'Magnet', cost: { L: 5, S: 5, A: 0 }, color: '#ff3366', once: false, desc: 'Attract (20s)' },
@@ -463,29 +464,146 @@
         };
 
         const FACTIONS = {
-            SYNTAX: { name: "SYNTAX ERROR", color: '#00ffaa', speed: 2.8, hp: 20, size: 12, steals: 'syntax', amount: 3, shape: 'triangle' },
+            SYNTAX: { name: "SYNTAX ERROR", color: '#00ffaa', speed: 2.8, hp: 20, size: 12, steals: 'syntax', amount: 3, shape: 'square' },
             LEAK: { name: "MEMORY LEAK", color: '#00ccff', speed: 1.4, hp: 60, size: 22, steals: 'arch', amount: 2, shape: 'square' },
-            BOMB: { name: "LOGIC BOMB", color: '#ff3366', speed: 0.7, hp: 150, size: 22, steals: 'logic', amount: 8, shape: 'pentagon' }
+            BOMB: { name: "LOGIC BOMB", color: '#ff3366', speed: 0.7, hp: 150, size: 22, steals: 'logic', amount: 8, shape: 'square' }
         };
 
+        // --- RESTRUCTURED CHRONOLOGICAL PORTFOLIO ---
         const PORTFOLIO_JSON = [
-            { name: "IT Trainer @ Levelapp", type: "exp", x: -1000, y: -800, color: '#9b59b6', size: 140, meta: "DSA Instructor (C/C++) | 2022", content: "Taught fundamental DSA concepts. Built simulators and ml modules.", link: "https://example.com" },
-            { name: "Builder @ iodump", type: "exp", x: 2000, y: 1800, color: '#e67e22', size: 150, meta: "Tech Lead | 2021-2024", content: "Led team of 20. Built CTF platforms and community events.", link: "https://example.com" },
-            { name: "Backend @ Zenskar", type: "exp", x: 4500, y: -2500, color: '#2ecc71', size: 170, meta: "FinTech | Jan 2023", content: "Integration development for SaaS billing. Optimized test suites.", link: "https://zenskar.com" },
-            { name: "DevOps @ PTC", type: "exp", x: 9000, y: -6000, color: '#3498db', size: 200, meta: "DevOps Engineer | July 2023 - Present", content: "Automated Azure pipelines and Salesforce deployments.", link: "https://ptc.com" },
-            { name: "TriFS", type: "proj", x: 12000, y: 10000, color: '#8e44ad', size: 160, req: 'distributed', cost: 50, meta: "Distributed FS", content: "High-performance Distributed File System in Go. Manages massive volumes of tiny files with distributed metadata service, data packing, and erasure coding.", link: "https://github.com" }
+            // --- NEAR (OLDER / FOUNDATIONAL) ---
+
+            {
+                name: "Builder @ iodump",
+                type: "exp",
+                x: 1500, y: 1500,
+                color: '#e67e22', size: 160,
+                meta: "Lead | 2021 - 2024",
+                content: "Led team of 20. Built CTF/Quiz platforms for 280+ concurrent users and taught DSA to 650+ students.",
+                link: "https://www.linkedin.com/company/iodump01/"
+            },
+            {
+                name: "Wumpus World",
+                type: "proj",
+                x: 2500, y: -500,
+                color: '#e74c3c', size: 130,
+                req: 'python', cost: 10,
+                meta: "AI Puzzle Game",
+                content: "2D adventure game featuring an AI agent navigating a logic-based puzzle environment.",
+                link: "https://ganimtron10.itch.io/wumpusworld"
+            },
+            {
+                name: "BF-Compiler",
+                type: "proj",
+                x: -1000, y: 2000,
+                color: '#00599c', size: 140,
+                req: 'cpp', cost: 20,
+                meta: "Optimized Compiler (C++)",
+                content: "High-performance compiler and REPL with instruction aggregation and pattern-matching.",
+                link: "https://github.com/ganimtron-10/bf-compiler"
+            },
+
+            // --- MID (EVOLUTION / GROWTH) ---
+            {
+                name: "GSoC @ FURY (PSF)",
+                type: "exp",
+                x: -3500, y: -3000,
+                color: '#f1c40f', size: 170,
+                meta: "Contributor | 2022 & 2023",
+                content: "Built core UI components (Spinbox, TreeUI) for scientific visualizer. Improved test coverage by 10%.",
+                link: "https://fury.gl"
+            },
+            {
+                name: "Backend @ Zenskar",
+                type: "exp",
+                x: 4500, y: 4000,
+                color: '#2ecc71', size: 180,
+                meta: "FinTech | 2023",
+                content: "Led integration for SaaS billing with Netsuite and Stripe. Reduced test time by 2.15m via async mocking.",
+                link: "https://zenskar.com"
+            },
+            {
+                name: "Bitcask",
+                type: "proj",
+                x: 5500, y: -2500,
+                color: '#d82c20', size: 150,
+                req: 'redis', cost: 12,
+                meta: "Storage Engine (Go/Redis)",
+                content: "Log-structured KV store featuring append-only storage and in-memory indexing.",
+                link: "https://github.com/ganimtron-10/bitcask"
+            },
+            {
+                name: "Myers Algo",
+                type: "proj",
+                x: -5000, y: 2000,
+                color: '#f7df1e', size: 135,
+                req: 'js', cost: 5,
+                meta: "Diff Engine (JS)",
+                content: "Efficient sequence comparison implementation of the Myers diff algorithm in TypeScript.",
+                link: "https://github.com/ganimtron-10/myers-algo"
+            },
+            {
+                name: "Seam Carver",
+                type: "proj",
+                x: -2000, y: 4000,
+                color: '#2496ed', size: 145,
+                req: 'docker', cost: 10,
+                meta: "Containerized Engine",
+                content: "Content-aware resizing engine containerized for scalable image processing tasks.",
+                link: "https://github.com/ganimtron-10/seam-carving"
+            },
+
+            // --- FAR (PRESENT & MASTERY) ---
+            {
+                name: "DevOps @ PTC",
+                type: "exp",
+                x: 8000, y: -5000,
+                color: '#3498db', size: 200,
+                meta: "Associate DevOps Engineer | Present",
+                content: "Automated Azure pipelines for image scanning. Developed 13+ scripts and managed Salesforce via Copado.",
+                link: "https://ptc.com"
+            },
+            {
+                name: "TriFS",
+                type: "proj",
+                x: 10000, y: 8000,
+                color: '#8e44ad', size: 160,
+                req: 'distributed', cost: 20,
+                meta: "Distributed File System",
+                content: "High-performance DFS for tiny files with distributed metadata and erasure coding.",
+                link: "https://github.com/ganimtron-10/TriFS"
+            },
+            {
+                name: "Akfak",
+                type: "proj",
+                x: -9000, y: -8000,
+                color: '#00add8', size: 155,
+                req: 'go', cost: 15,
+                meta: "Kafka-inspired System",
+                content: "Messaging system built from scratch implementing core Kafka protocol APIs and TCP communication.",
+                link: "https://github.com/ganimtron-10/akfak"
+            },
+            {
+                name: "Sutras",
+                type: "proj",
+                x: 6000, y: 7000,
+                color: '#0089d6', size: 150,
+                req: 'azure', cost: 15,
+                meta: "Cloud Sim Platform",
+                content: "Platform for testing and visualizing complex algorithms, deployed via Azure Pipelines.",
+                link: "https://ganimtron-10.is-a.dev/sutras/"
+            }
         ];
 
-        // --- TUTORIAL CONTENT ---
         const TUTORIAL_STEPS = [
-            { title: "THE ARCHITECT", text: "Welcome, Architect. Navigate the void with <b>WASD</b> or the <b>Joystick</b>. Rebuild your technical legacy to secure the sector.", visual: `<svg width="50" height="50"><polygon points="25,5 45,45 5,45" fill="#00ffcc"/></svg>` },
-            { title: "RESOURCE NODES", text: "Collect materials from the void:<br><span style='color:#ff3366'>● Logic</span>, <span style='color:#00ffaa'>▲ Syntax</span>, and <span style='color:#00ccff'>■ Arch</span>.", visual: `<div style="display:flex; gap:15px; align-items:center;"><div style="width:15px; height:15px; border-radius:50%; background:#ff3366;"></div><div style="width:0; height:0; border-left:10px solid transparent; border-right:10px solid transparent; border-bottom:18px solid #00ffaa;"></div><div style="width:15px; height:15px; background:#00ccff;"></div></div>` },
-            { title: "DISTRACTIONS", text: "Beware of <b>DISTRACTIONS</b> (Enemies). They match node colors and steal your Resources. Triangle = Syntax, Square = Arch, Pentagon = Logic.", visual: `<div style="display:flex; gap:15px;"><svg width="25" height="25"><polygon points="12,2 22,22 2,22" fill="#00ffaa"/></svg><svg width="25" height="25"><rect x="2" y="2" width="20" height="20" fill="#00ccff"/></svg><svg width="25" height="25"><polygon points="12,2 22,10 18,22 6,22 2,10" fill="#ff3366"/></svg></div>` },
-            { title: "GRAVITY WELLS", text: "Restore planets with <b>[SPACE]</b>. Once recovered, their gravity will suck in and destroy Distractions instantly.", visual: `<div style="width:60px; height:60px; border-radius:50%; border:1px dashed #00ffcc; display:flex; align-items:center; justify-content:center;"><div style="width:15px; height:15px; background:#00ffcc; border-radius:50%;"></div></div>` },
-            { title: "DOCKING FEED", text: "Press <b>[D]</b> near a recovered planet to extract technical intel and visit the live project terminal.", visual: `<div style="width:30px; height:30px; border-radius:50%; border:1px solid #00ffcc; display:flex; align-items:center; justify-content:center; color:#00ffcc; font-weight:bold;">D</div>` }
+            { title: "THE ARCHITECT", text: "Welcome, Architect. Use <b>WASD</b> or <b>Joystick</b> to navigate. You are rebuilding your technical legacy from scratch.", visual: `<svg width="50" height="50"><polygon points="25,5 45,45 5,45" fill="#00ffcc"/></svg>` },
+            { title: "NODES", text: "Collect materials from the void to fuel the build:<br><span style='color:#ff3366'>● Logic</span>, <span style='color:#00ffaa'>▲ Syntax</span>, and <span style='color:#00ccff'>■ Architecture</span>.", visual: `<div style="display:flex; gap:15px; align-items:center;"><div style="width:15px; height:15px; border-radius:50%; background:#ff3366;"></div><div style="width:0; height:0; border-left:10px solid transparent; border-right:10px solid transparent; border-bottom:18px solid #00ffaa;"></div><div style="width:15px; height:15px; background:#00ccff;"></div></div>` },
+            { title: "DISTRACTIONS", text: "Avoid <b>DISTRACTIONS</b> (Enemies). They match node colors and steal your Focus (Resources).", visual: `<div style="display:flex; gap:15px;"><svg width="25" height="25"><polygon points="12,2 22,22 2,22" fill="#00ffaa"/></svg><svg width="25" height="25"><rect x="2" y="2" width="20" height="20" fill="#00ccff"/></svg><svg width="25" height="25"><polygon points="12,2 22,10 18,22 6,22 2,10" fill="#ff3366"/></svg></div>` },
+            { title: "GRAVITY WEAPONS", text: "Restore planets with <b>[SPACE]</b>. Once recovered, their gravity will destroy Distractions instantly. Your work protects you.", visual: `<div style="width:60px; height:60px; border-radius:50%; border:1px dashed #00ffcc; display:flex; align-items:center; justify-content:center;"><div style="width:15px; height:15px; background:#00ffcc; border-radius:50%;"></div></div>` },
+            { title: "DOCKING FEED", text: "Press <b>[D]</b> near a recovered planet to extract technical intel and visit the live terminal.", visual: `<div style="width:30px; height:30px; border-radius:50%; border:1px solid #00ffcc; display:flex; align-items:center; justify-content:center; color:#00ffcc; font-weight:bold;">D</div>` }
         ];
 
-        // --- ENGINE STATE ---
+        // --- CORE ENGINE ---
         let ship, cameraPos, orbPool = [], enemyPool = [], particlePool = [], planets = [];
         let isCrafting = false, isTutorial = true, isDocked = false, tutorialStep = 0, dockedPlanet = null;
         let typedBuffer = "";
@@ -498,14 +616,11 @@
             joystick.base = createVector(0, 0);
             joystick.current = createVector(0, 0);
             joystick.vec = createVector(0, 0);
-
             for (let i = 0; i < MAX_ORBS; i++) orbPool.push(new Orb());
             for (let i = 0; i < MAX_ENEMIES; i++) enemyPool.push(new Enemy());
             for (let i = 0; i < 100; i++) particlePool.push(new Particle());
             for (let p of PORTFOLIO_JSON) planets.push(new Planet(p));
-
             orbPool.forEach(o => o.spawn(random(-SPAWN_RANGE, SPAWN_RANGE), random(-SPAWN_RANGE, SPAWN_RANGE)));
-
             loadGame();
             if (windowWidth < 800) document.getElementById('mobile-controls').style.display = 'block';
             document.getElementById('tutorial-panel').style.display = 'block';
@@ -516,103 +631,23 @@
         function draw() {
             background(2, 2, 6);
             let paused = isCrafting || isTutorial || isDocked;
-
-            if (!paused) {
-                cameraPos.x = lerp(cameraPos.x, ship.pos.x, 0.1);
-                cameraPos.y = lerp(cameraPos.y, ship.pos.y, 0.1);
-            }
-
-            push();
-            translate(width / 2 - cameraPos.x, height / 2 - cameraPos.y);
-            drawGrid();
-
-            orbPool.forEach(o => {
-                if (o.active) {
-                    o.display();
-                    if (!paused) {
-                        if (ship.buffs.magnet > 0 && dist(ship.pos.x, ship.pos.y, o.pos.x, o.pos.y) < 400) {
-                            o.pos.add(p5.Vector.sub(ship.pos, o.pos).normalize().mult(6));
-                        }
-                        if (ship.hits(o)) ship.collect(o);
-                    }
-                }
-            });
-
-            enemyPool.forEach(e => {
-                if (e.active) {
-                    if (!paused) {
-                        if (ship.buffs.firewall > 0 && dist(ship.pos.x, ship.pos.y, e.pos.x, e.pos.y) < 300) {
-                            e.pos.add(p5.Vector.sub(e.pos, ship.pos).normalize().mult(8));
-                        }
-                        e.update(ship, planets);
-                    }
-                    e.display();
-                    if (!paused && ship.hits(e)) ship.takeDamage(e);
-                }
-            });
-
+            if (!paused) { cameraPos.x = lerp(cameraPos.x, ship.pos.x, 0.1); cameraPos.y = lerp(cameraPos.y, ship.pos.y, 0.1); }
+            push(); translate(width / 2 - cameraPos.x, height / 2 - cameraPos.y); drawGrid();
+            orbPool.forEach(o => { if (o.active) { o.display(); if (!paused) { if (ship.buffs.magnet > 0 && dist(ship.pos.x, ship.pos.y, o.pos.x, o.pos.y) < 400) o.pos.add(p5.Vector.sub(ship.pos, o.pos).normalize().mult(6)); if (ship.hits(o)) ship.collect(o); } } });
+            enemyPool.forEach(e => { if (e.active) { if (!paused) { if (ship.buffs.firewall > 0 && dist(ship.pos.x, ship.pos.y, e.pos.x, e.pos.y) < 300) e.pos.add(p5.Vector.sub(e.pos, ship.pos).normalize().mult(8)); e.update(ship, planets); } e.display(); if (!paused && ship.hits(e)) ship.takeDamage(e); } });
             particlePool.forEach(p => { if (p.active) { if (!paused) p.update(); p.display(); } });
             for (let p of planets) { if (!paused) p.update(); p.display(); if (!paused && p.repaired && p.type === 'proj') enemyPool.forEach(e => { if (e.active && dist(p.pos.x, p.pos.y, e.pos.x, e.pos.y) < 700) p.defend(e); }); }
             if (!paused) ship.update(); ship.display(); pop();
-
-            if (!paused) {
-                handleSpawns();
-                updateCompass();
-                ship.updateBuffs();
-                if (frameCount % 600 === 0) saveGame();
-            }
+            if (!paused) { handleSpawns(); updateCompass(); ship.updateBuffs(); if (frameCount % 600 === 0) saveGame(); }
             drawRadar();
             if (joystick.active) drawJoystick();
         }
 
-        function drawGrid() {
-            stroke(30, 50, 80);
-            strokeWeight(1);
-            let step = 400;
-            let sX = floor((cameraPos.x - width) / step) * step, sY = floor((cameraPos.y - height) / step) * step;
-            for (let x = sX; x < sX + width * 2; x += step) line(x, cameraPos.y - height, x, cameraPos.y + height);
-            for (let y = sY; y < sY + height * 2; y += step) line(cameraPos.x - width, y, cameraPos.x + width, y);
-        }
-
-        function drawJoystick() {
-            noStroke();
-            fill(255, 30);
-            ellipse(joystick.base.x, joystick.base.y, 120);
-            fill(0, 255, 204, 100);
-            ellipse(joystick.current.x, joystick.current.y, 50);
-        }
-
-        function touchStarted() {
-            if (isCrafting || isTutorial || isDocked) return; // DON'T BLOCK IF PAUSED, but buttons are HTML anyway
-
-            // Only trigger joystick on left half, and ensure we aren't clicking an HTML button
-            if (mouseX < width / 2) {
-                joystick.active = true;
-                joystick.base.set(mouseX, mouseY);
-                joystick.current.set(mouseX, mouseY);
-                return false; // Prevent default only for joystick
-            }
-        }
-
-        function touchMoved() {
-            if (joystick.active) {
-                joystick.current.set(mouseX, mouseY);
-                let diff = p5.Vector.sub(joystick.current, joystick.base);
-                if (diff.mag() > 50) diff.setMag(50);
-                joystick.vec = diff.copy().div(50);
-                joystick.current = p5.Vector.add(joystick.base, diff);
-                return false;
-            }
-        }
-
-        function touchEnded() {
-            if (joystick.active) {
-                joystick.active = false;
-                joystick.vec.set(0, 0);
-                return false;
-            }
-        }
-
+        function drawGrid() { stroke(30, 50, 80); strokeWeight(1); let step = 400; let sX = floor((cameraPos.x - width) / step) * step, sY = floor((cameraPos.y - height) / step) * step; for (let x = sX; x < sX + width * 2; x += step) line(x, cameraPos.y - height, x, cameraPos.y + height); for (let y = sY; y < sY + height * 2; y += step) line(cameraPos.x - width, y, cameraPos.x + width, y); }
+        function drawJoystick() { noStroke(); fill(255, 30); ellipse(joystick.base.x, joystick.base.y, 120); fill(0, 255, 204, 100); ellipse(joystick.current.x, joystick.current.y, 50); }
+        function touchStarted() { if (isCrafting || isTutorial || isDocked) return; if (mouseX < width / 2) { joystick.active = true; joystick.base.set(mouseX, mouseY); joystick.current.set(mouseX, mouseY); return false; } }
+        function touchMoved() { if (joystick.active) { joystick.current.set(mouseX, mouseY); let d = p5.Vector.sub(joystick.current, joystick.base); if (d.mag() > 50) d.setMag(50); joystick.vec = d.copy().div(50); joystick.current = p5.Vector.add(joystick.base, d); return false; } }
+        function touchEnded() { if (joystick.active) { joystick.active = false; joystick.vec.set(0, 0); return false; } }
         function triggerRestore() { if (dockedPlanet && !dockedPlanet.repaired) dockedPlanet.restore(); }
         function openTutorial() { tutorialStep = 0; isTutorial = true; document.getElementById('tutorial-panel').style.display = 'block'; document.getElementById('pause-overlay').style.display = 'block'; updateTutorial(); }
         function nextTutorial() { tutorialStep++; if (tutorialStep >= TUTORIAL_STEPS.length) closeTutorial(); else updateTutorial(); }
@@ -623,29 +658,17 @@
         function toggleDocking() {
             if (!dockedPlanet || !dockedPlanet.repaired) { if (isDocked) { isDocked = false; document.getElementById('docking-panel').style.display = 'none'; document.getElementById('pause-overlay').style.display = 'none'; } return; }
             isDocked = !isDocked;
-            const panel = document.getElementById('docking-panel'), overlay = document.getElementById('pause-overlay');
-            const linkContainer = document.getElementById('dock-link-container');
-            if (isDocked) {
-                panel.style.display = 'flex';
-                overlay.style.display = 'block';
-                document.getElementById('dock-data').innerHTML = `
-                    <div class="dock-title">${dockedPlanet.name}</div>
-                    <div class="dock-meta">${dockedPlanet.meta}</div>
-                    <div class="dock-content">${dockedPlanet.content}</div>
-                `;
-                if (dockedPlanet.link) {
-                    linkContainer.innerHTML = `<a href="${dockedPlanet.link}" target="_blank" class="external-link">Visit Terminal →</a>`;
-                } else { linkContainer.innerHTML = ''; }
-            }
-            else { panel.style.display = 'none'; overlay.style.display = 'none'; }
+            const p = document.getElementById('docking-panel'), ov = document.getElementById('pause-overlay'), lc = document.getElementById('dock-link-container');
+            if (isDocked) { p.style.display = 'flex'; ov.style.display = 'block'; document.getElementById('dock-data').innerHTML = `<div class="dock-title">${dockedPlanet.name}</div><div class="dock-meta">${dockedPlanet.meta}</div><div class="dock-content">${dockedPlanet.content}</div>`; if (dockedPlanet.link) lc.innerHTML = `<a href="${dockedPlanet.link}" target="_blank" class="external-link">Visit →</a>`; else lc.innerHTML = ''; }
+            else { p.style.display = 'none'; ov.style.display = 'none'; }
         }
 
         function keyPressed() {
             typedBuffer += key.toLowerCase();
-            if (typedBuffer.length > 20) typedBuffer = typedBuffer.slice(-20);
             if (typedBuffer.endsWith("magnet")) { ship.buffs.magnet = 10000; logMsg("OVERRIDE: MAGNET ON"); }
-            if (typedBuffer.endsWith("firewall")) { ship.buffs.firewall = 10000; logMsg("OVERRIDE: SHIELD ON"); }
-            if (typedBuffer.endsWith("root")) { ship.res.logic = 999; ship.res.syntax = 999; ship.res.arch = 999; logMsg("OVERRIDE: ROOT ACCESS"); updateUI(); }
+            if (typedBuffer.endsWith("repel")) { ship.buffs.firewall = 10000; logMsg("OVERRIDE: SHIELD ON"); }
+            if (typedBuffer.endsWith("root")) { ship.res.logic = 999; ship.res.syntax = 999; ship.res.arch = 999; logMsg("ROOT ACCESS GRANTED"); updateUI(); }
+
             if (isTutorial && key !== 't' && key !== 'T') return;
             if (key === 'c' || key === 'C') toggleCrafting();
             if (key === 'd' || key === 'D') toggleDocking();
@@ -655,35 +678,19 @@
         }
 
         window.compileSkill = function (id, section) {
-            let list = SKILL_DATA[section], skill = list.find(s => s.id === id);
-            const canAfford = ship.res.logic >= (skill.cost.L || 0) && ship.res.syntax >= (skill.cost.S || 0) && ship.res.arch >= (skill.cost.A || 0);
-            if (canAfford) {
-                ship.res.logic -= (skill.cost.L || 0); ship.res.syntax -= (skill.cost.S || 0); ship.res.arch -= (skill.cost.A || 0);
-                if (skill.once) { ship.skills.push(skill); logMsg(`COMPILED: ${skill.name}`); }
-                else { if (id === 'magnet') ship.buffs.magnet = 1200; if (id === 'firewall') ship.buffs.firewall = 900; logMsg(`ACTIVE: ${skill.name}`); }
-                spawnExplosion(ship.pos.x, ship.pos.y, skill.color, 30); updateUI(); updateCraftingUI(); saveGame();
-            } else { logMsg(`ERR: INSUFFICIENT MATERIALS`); }
+            let list = SKILL_DATA[section], s = list.find(x => x.id === id);
+            const can = ship.res.logic >= (s.cost.L || 0) && ship.res.syntax >= (s.cost.S || 0) && ship.res.arch >= (s.cost.A || 0);
+            if (can) { ship.res.logic -= (s.cost.L || 0); ship.res.syntax -= (s.cost.S || 0); ship.res.arch -= (s.cost.A || 0); if (s.once) ship.skills.push(s); else { if (id === 'magnet') ship.buffs.magnet = 1200; if (id === 'firewall') ship.buffs.firewall = 900; } spawnExplosion(ship.pos.x, ship.pos.y, s.color, 30); updateUI(); updateCraftingUI(); saveGame(); logMsg(`COMPILED: ${s.name}`); }
+            else logMsg(`ERR: MATERIALS DEPLETED`);
         };
 
         class Ship {
             constructor() { this.pos = createVector(0, 0); this.vel = createVector(0, 0); this.acc = createVector(0, 0); this.angle = 0; this.res = { logic: 0, syntax: 0, arch: 0 }; this.skills = []; this.buffs = { magnet: 0, firewall: 0 }; }
             update() {
-                if (keyIsDown(LEFT_ARROW) || keyIsDown(65)) this.angle -= 0.08;
-                if (keyIsDown(RIGHT_ARROW) || keyIsDown(68)) this.angle += 0.08;
-                if (keyIsDown(UP_ARROW) || keyIsDown(87)) { let f = p5.Vector.fromAngle(this.angle).mult(0.4); this.acc.add(f); }
+                if (keyIsDown(LEFT_ARROW) || keyIsDown(65)) this.angle -= 0.08; if (keyIsDown(RIGHT_ARROW) || keyIsDown(68)) this.angle += 0.08; if (keyIsDown(UP_ARROW) || keyIsDown(87)) { let f = p5.Vector.fromAngle(this.angle).mult(0.4); this.acc.add(f); }
                 if (joystick.active && joystick.vec.mag() > 0.1) { this.angle = joystick.vec.heading(); let f = joystick.vec.copy().mult(0.5); this.acc.add(f); }
-
-                // --- ROCKET THRUST PARTICLES ---
-                if (this.acc.mag() > 0.01) {
-                    for (let i = 0; i < 2; i++) {
-                        let p = particlePool.find(p => !p.active);
-                        if (p) p.spawn(this.pos.x - cos(this.angle) * 15, this.pos.y - sin(this.angle) * 15, '#00ffff', random(1, 3));
-                    }
-                }
-
-                this.vel.add(this.acc).mult(0.96); this.pos.add(this.vel); this.acc.mult(0);
-                dockedPlanet = null;
-                for (let p of planets) { if (dist(this.pos.x, this.pos.y, p.pos.x, p.pos.y) < 300) { dockedPlanet = p; break; } }
+                if (this.acc.mag() > 0.01) { for (let i = 0; i < 2; i++) { let p = particlePool.find(p => !p.active); if (p) p.spawn(this.pos.x - cos(this.angle) * 15, this.pos.y - sin(this.angle) * 15, '#00ffff', random(1, 3)); } }
+                this.vel.add(this.acc).mult(0.96); this.pos.add(this.vel); this.acc.mult(0); dockedPlanet = null; for (let p of planets) { if (dist(this.pos.x, this.pos.y, p.pos.x, p.pos.y) < 300) { dockedPlanet = p; break; } }
             }
             updateBuffs() { if (this.buffs.magnet > 0) this.buffs.magnet--; if (this.buffs.firewall > 0) this.buffs.firewall--; if (frameCount % 30 === 0) updateUI(); }
             display() { push(); translate(this.pos.x, this.pos.y); rotate(this.angle); if (this.buffs.firewall > 0) { noFill(); stroke(255, 255, 0, 150); strokeWeight(2); ellipse(0, 0, 80 + sin(frameCount * 0.2) * 10); } fill(0, 255, 200); triangle(25, 0, -10, -12, -10, 12); pop(); }
@@ -695,19 +702,15 @@
         class Orb {
             constructor() { this.active = false; this.pos = createVector(0, 0); }
             spawn(x, y) { this.pos.set(x, y); this.active = true; let r = random(); if (r < 0.4) { this.type = 'logic'; this.color = '#ff3366'; } else if (r < 0.8) { this.type = 'syntax'; this.color = '#00ffaa'; } else { this.type = 'arch'; this.color = '#00ccff'; } }
-            display() { push(); translate(this.pos.x, this.pos.y); fill(this.color); drawingContext.shadowBlur = 10; drawingContext.shadowColor = this.color; if (this.type === 'logic') ellipse(0, 0, 14); else if (this.type === 'syntax') triangle(0, -10, 10, 10, -10, 10); else rect(-7, -7, 14, 14); pop(); }
+            display() { push(); translate(this.pos.x, this.pos.y); fill(this.color); drawingContext.shadowBlur = 10; drawingContext.shadowColor = this.color; ellipse(0, 0, 14); pop(); }
         }
 
         class Enemy {
             constructor() { this.active = false; this.pos = createVector(0, 0); this.vel = createVector(0, 0); }
             spawn(x, y) { this.pos.set(x, y); this.active = true; let keys = Object.keys(FACTIONS); this.faction = FACTIONS[keys[floor(random(keys.length))]]; this.hp = this.faction.hp; }
-            update(target, planets) {
+            update(target, ps) {
                 let d = dist(this.pos.x, this.pos.y, target.pos.x, target.pos.y), trapped = false;
-                for (let p of planets) {
-                    if (!p.repaired) continue;
-                    let dP = dist(this.pos.x, this.pos.y, p.pos.x, p.pos.y);
-                    if (dP < p.size * 2.2) { trapped = true; let pull = p5.Vector.sub(p.pos, this.pos).normalize().mult(this.faction.speed * 1.6); this.vel = p5.Vector.lerp(this.vel, pull, 0.15); if (dP < p.size / 2.5) { this.active = false; spawnExplosion(this.pos.x, this.pos.y, this.faction.color, 15); logMsg(`TRAPPED: ${this.faction.name}`); return; } }
-                }
+                for (let p of ps) { if (p.repaired) { let dP = dist(this.pos.x, this.pos.y, p.pos.x, p.pos.y); if (dP < p.size * 2.2) { trapped = true; let pull = p5.Vector.sub(p.pos, this.pos).normalize().mult(this.faction.speed * 1.6); this.vel = p5.Vector.lerp(this.vel, pull, 0.15); if (dP < p.size / 2.5) { this.active = false; spawnExplosion(this.pos.x, this.pos.y, this.faction.color, 15); logMsg(`TRAPPED: ${this.faction.name}`); return; } } } }
                 if (!trapped) { if (d < width * 0.9) { let steer = p5.Vector.sub(target.pos, this.pos).normalize().mult(this.faction.speed); this.vel = p5.Vector.lerp(this.vel, steer, 0.05); } else { this.active = false; } }
                 this.pos.add(this.vel);
             }
@@ -717,21 +720,13 @@
         class Planet {
             constructor(d) { Object.assign(this, d); this.pos = createVector(d.x, d.y); this.repaired = (d.type === 'exp'); this.cracks = []; for (let i = 0; i < 5; i++) this.cracks.push({ x1: random(-d.size / 2, d.size / 2), y1: random(-d.size / 2, d.size / 2), x2: random(-d.size / 2, d.size / 2), y2: random(-d.size / 2, d.size / 2) }); }
             update() { if (!this.repaired && dist(ship.pos.x, ship.pos.y, this.pos.x, this.pos.y) < 250) if (keyIsDown(32)) this.restore(); }
-            restore() {
-                let hasSkill = !this.req || ship.skills.some(s => s.id === this.req), canPay = ship.res.logic >= this.cost;
-                if (hasSkill && canPay) { ship.res.logic -= this.cost; this.repaired = true; spawnExplosion(this.pos.x, this.pos.y, this.color, 40); logMsg(`RESTORED: ${this.name.toUpperCase()}`); updateUI(); saveGame(); }
-                else if (!hasSkill) { logMsg(`ERR: ${this.req.toUpperCase()} REQ`); } else { logMsg(`ERR: NO LOGIC`); }
-            }
+            restore() { let hasS = !this.req || ship.skills.some(s => s.id === this.req), canP = ship.res.logic >= this.cost; if (hasS && canP) { ship.res.logic -= this.cost; this.repaired = true; spawnExplosion(this.pos.x, this.pos.y, this.color, 40); logMsg(`RESTORED: ${this.name.toUpperCase()}`); updateUI(); saveGame(); } else if (!hasS) logMsg(`ERR: ${this.req.toUpperCase()} REQ`); else logMsg(`ERR: NO LOGIC`); }
             display() {
                 let dS = dist(ship.pos.x, ship.pos.y, this.pos.x, this.pos.y); push(); translate(this.pos.x, this.pos.y);
                 if (!this.repaired) { stroke(100); strokeWeight(1); this.cracks.forEach(c => line(c.x1, c.y1, c.x2, c.y2)); }
                 noFill(); stroke(this.repaired ? (this.color + '44') : '#333333'); strokeWeight(3); ellipse(0, 0, this.size * 1.8, this.size * 0.4);
                 noStroke(); fill(this.repaired ? this.color : 30); ellipse(0, 0, this.size);
-                if (dS < 600) {
-                    textAlign(CENTER); fill(255); textSize(18); text(this.name.toUpperCase(), 0, -this.size / 2 - 40);
-                    if (!this.repaired) { fill('#ffcc00'); textSize(12); text(`REPAIR REQ: ${this.req ? this.req.toUpperCase() : 'NONE'} | ${this.cost}L`, 0, this.size / 2 + 30); }
-                    else { fill(0, 255, 200); textSize(12); text(`DOCK AVAILABLE`, 0, this.size / 2 + 30); }
-                } pop();
+                if (dS < 600) { textAlign(CENTER); fill(255); textSize(18); text(this.name.toUpperCase(), 0, -this.size / 2 - 40); if (!this.repaired) { fill('#ffcc00'); textSize(12); text(`REPAIR REQ: ${this.req ? this.req.toUpperCase() : 'NONE'} | ${this.cost}L`, 0, this.size / 2 + 30); } else { fill(0, 255, 200); textSize(12); text(`DOCK AVAILABLE`, 0, this.size / 2 + 30); } } pop();
             }
             defend(e) { stroke(this.color); strokeWeight(3); line(this.pos.x, this.pos.y, e.pos.x, e.pos.y); e.hp -= 3; }
         }
@@ -740,28 +735,12 @@
         function spawnExplosion(x, y, color, count) { for (let i = 0; i < count; i++) { let p = particlePool.find(p => !p.active); if (p) p.spawn(x, y, color, random(1, 8)); } }
         function logMsg(m) { const logContainer = document.getElementById('message-log'), entry = document.createElement('div'); entry.className = 'log-entry'; entry.innerText = `> ${m}`; logContainer.appendChild(entry); while (logContainer.childNodes.length > 4) logContainer.removeChild(logContainer.firstChild); setTimeout(() => { if (entry.parentNode === logContainer) logContainer.removeChild(entry); }, 5000); }
         function toggleCrafting() { isCrafting = !isCrafting; const sidebar = document.getElementById('crafting-sidebar'), overlay = document.getElementById('pause-overlay'), compass = document.getElementById('objective-compass'); if (isCrafting) { sidebar.classList.add('active'); overlay.style.display = 'block'; compass.classList.add('pushed'); updateCraftingUI(); } else { sidebar.classList.remove('active'); overlay.style.display = 'none'; compass.classList.remove('pushed'); saveGame(); } }
-        function updateUI() { document.getElementById('res-logic').innerText = ship.res.logic; document.getElementById('res-syntax').innerText = ship.res.syntax; document.getElementById('res-arch').innerText = ship.res.arch; let container = document.getElementById('skills-container'); container.innerHTML = ''; ship.skills.forEach(s => { let span = document.createElement('span'); span.className = 'skill-tag'; span.innerText = s.id.toUpperCase(); span.style.borderLeft = `2px solid ${s.color}`; container.appendChild(span); }); let bc = document.getElementById('buffs-container'); bc.innerHTML = ''; if (ship.buffs.magnet > 0) bc.innerHTML += `<div class="buff-timer">MAGNET: ${Math.ceil(ship.buffs.magnet / 60)}s</div>`; if (ship.buffs.firewall > 0) bc.innerHTML += `<div class="buff-timer">SHIELD: ${Math.ceil(ship.buffs.firewall / 60)}s</div>`; }
+        function updateUI() { document.getElementById('res-logic').innerText = ship.res.logic; document.getElementById('res-syntax').innerText = ship.res.syntax; document.getElementById('res-arch').innerText = ship.res.arch; let c = document.getElementById('skills-container'); c.innerHTML = ''; ship.skills.forEach(s => { let span = document.createElement('span'); span.className = 'skill-tag'; span.innerText = s.id.toUpperCase(); span.style.borderLeft = `2px solid ${s.color}`; c.appendChild(span); }); let bc = document.getElementById('buffs-container'); bc.innerHTML = ''; if (ship.buffs.magnet > 0) bc.innerHTML += `<div class="buff-timer">MAGNET: ${Math.ceil(ship.buffs.magnet / 60)}s</div>`; if (ship.buffs.firewall > 0) bc.innerHTML += `<div class="buff-timer">SHIELD: ${Math.ceil(ship.buffs.firewall / 60)}s</div>`; }
         function saveGame() { localStorage.setItem(SAVE_KEY, JSON.stringify({ res: ship.res, skills: ship.skills.map(s => s.id), planets: planets.map(p => p.repaired), pos: { x: ship.pos.x, y: ship.pos.y } })); const el = document.getElementById('save-indicator'); el.style.opacity = 1; setTimeout(() => el.style.opacity = 0, 1000); }
         function loadGame() { const raw = localStorage.getItem(SAVE_KEY); if (raw) { try { const data = JSON.parse(raw); ship.res = data.res; ship.pos.set(data.pos.x, data.pos.y); data.skills.forEach(sid => { for (let cat in SKILL_DATA) { let s = SKILL_DATA[cat].find(x => x.id === sid); if (s) ship.skills.push(s); } }); data.planets.forEach((rep, i) => { if (planets[i]) planets[i].repaired = rep; }); updateUI(); } catch (e) { } } }
         function updateCraftingUI() { let html = ''; for (let section in SKILL_DATA) { html += `<div class="section-label">${section}</div><div class="craft-grid">`; SKILL_DATA[section].forEach(s => { let owned = s.once && ship.skills.some(sk => sk.id === s.id), locked = s.req && !ship.skills.some(sk => sk.id === s.req), canAfford = ship.res.logic >= (s.cost.L || 0) && ship.res.syntax >= (s.cost.S || 0) && ship.res.arch >= (s.cost.A || 0); html += `<div class="craft-card ${locked ? 'locked' : ''} ${owned ? 'owned' : ''} ${(!canAfford && !owned && !locked) ? 'unaffordable' : ''}" onclick="window.compileSkill('${s.id}', '${section}')"><div class="card-title" style="color:${s.color}">${s.name}</div><div class="card-costs"><span class="cost-tag" style="background:#ff336622; color:#ff3366">${s.cost.L}L</span><span class="cost-tag" style="background:#00ffaa22; color:#00ffaa">${s.cost.S}S</span><span class="cost-tag" style="background:#00ccff22; color:#00ccff">${s.cost.A}A</span></div></div>`; }); html += `</div>`; } document.getElementById('craft-options').innerHTML = html; }
         function updateCompass() { let closest = null, minDist = Infinity; for (let p of planets) { let d = dist(ship.pos.x, ship.pos.y, p.pos.x, p.pos.y); if (d < minDist) { minDist = d; closest = p; } } if (closest) { document.getElementById('target-dist').innerText = floor(minDist) + "m"; document.getElementById('target-name').innerText = closest.name.toUpperCase(); document.getElementById('target-name').style.color = closest.repaired ? closest.color : '#666'; } }
-
-        function drawRadar() {
-            let pad = 15;
-            // Fixed Radar Positioning for Mobile
-            let bottomOffset = (windowWidth < 800) ? 170 : pad;
-            push();
-            translate(width - RADAR_SIZE - pad, height - RADAR_SIZE - bottomOffset);
-            fill(0, 20, 20, 220);
-            stroke(0, 255, 200, 100);
-            rect(0, 0, RADAR_SIZE, RADAR_SIZE);
-            let cx = RADAR_SIZE / 2, cy = RADAR_SIZE / 2;
-            planets.forEach(p => { let dx = (p.pos.x - ship.pos.x) * RADAR_SCALE, dy = (p.pos.y - ship.pos.y) * RADAR_SCALE; if (abs(dx) < RADAR_SIZE / 2 && abs(dy) < RADAR_SIZE / 2) { if (p.repaired) { fill(p.color); noStroke(); ellipse(cx + dx, cy + dy, 6); } else { noFill(); stroke(100); ellipse(cx + dx, cy + dy, 5); } } });
-            orbPool.forEach(o => { if (o.active) { let dx = (o.pos.x - ship.pos.x) * RADAR_SCALE, dy = (o.pos.y - ship.pos.y) * RADAR_SCALE; if (abs(dx) < RADAR_SIZE / 2 && abs(dy) < RADAR_SIZE / 2) { fill(o.color); noStroke(); ellipse(cx + dx, cy + dy, 2); } } });
-            enemyPool.forEach(e => { if (e.active) { let dx = (e.pos.x - ship.pos.x) * RADAR_SCALE, dy = (e.pos.y - ship.pos.y) * RADAR_SCALE; if (abs(dx) < RADAR_SIZE / 2 && abs(dy) < RADAR_SIZE / 2) { fill(e.faction.color); noStroke(); ellipse(cx + dx, cy + dy, 3); } } });
-            fill(255); noStroke(); ellipse(cx, cy, 4); pop();
-        }
-
+        function drawRadar() { let pad = 15; let bottomOffset = (windowWidth < 800) ? 170 : pad; push(); translate(width - RADAR_SIZE - pad, height - RADAR_SIZE - bottomOffset); fill(0, 20, 20, 220); stroke(0, 255, 200, 100); rect(0, 0, RADAR_SIZE, RADAR_SIZE); let cx = RADAR_SIZE / 2, cy = RADAR_SIZE / 2; planets.forEach(p => { let dx = (p.pos.x - ship.pos.x) * RADAR_SCALE, dy = (p.pos.y - ship.pos.y) * RADAR_SCALE; if (abs(dx) < RADAR_SIZE / 2 && abs(dy) < RADAR_SIZE / 2) { if (p.repaired) { fill(p.color); noStroke(); ellipse(cx + dx, cy + dy, 6); } else { noFill(); stroke(100); ellipse(cx + dx, cy + dy, 5); } } }); orbPool.forEach(o => { if (o.active) { let dx = (o.pos.x - ship.pos.x) * RADAR_SCALE, dy = (o.pos.y - ship.pos.y) * RADAR_SCALE; if (abs(dx) < RADAR_SIZE / 2 && abs(dy) < RADAR_SIZE / 2) { fill(o.color); noStroke(); ellipse(cx + dx, cy + dy, 2); } } }); enemyPool.forEach(e => { if (e.active) { let dx = (e.pos.x - ship.pos.x) * RADAR_SCALE, dy = (e.pos.y - ship.pos.y) * RADAR_SCALE; if (abs(dx) < RADAR_SIZE / 2 && abs(dy) < RADAR_SIZE / 2) { fill(e.faction.color); noStroke(); ellipse(cx + dx, cy + dy, 3); } } }); fill(255); noStroke(); ellipse(cx, cy, 4); pop(); }
         function handleSpawns() { if (frameCount % 300 === 0) { let e = enemyPool.find(e => !e.active); if (e) { let s = floor(random(4)), x, y; if (s === 0) { x = ship.pos.x - width; y = ship.pos.y + random(-height, height); } else if (s === 1) { x = ship.pos.x + width; y = ship.pos.y + random(-height, height); } else if (s === 2) { x = ship.pos.x + random(-width, width); y = ship.pos.y - height; } else { x = ship.pos.x + random(-width, width); y = ship.pos.y + height; } e.spawn(x, y); } } }
         function windowResized() { resizeCanvas(windowWidth, windowHeight); if (windowWidth < 800) document.getElementById('mobile-controls').style.display = 'block'; else document.getElementById('mobile-controls').style.display = 'none'; }
     </script>
