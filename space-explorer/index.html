@@ -474,12 +474,13 @@
             // --- NEAR (OLDER / FOUNDATIONAL) ---
 
             {
-                name: "Builder @ iodump",
+                name: "Builder @ IODump",
                 type: "exp",
                 x: 1500, y: 1500,
                 color: '#e67e22', size: 160,
-                meta: "Lead | 2021 - 2024",
-                content: "Led team of 20. Built CTF/Quiz platforms for 280+ concurrent users and taught DSA to 650+ students.",
+                req: 'mysql', cost: 15,
+                meta: "Builder | 2021 - 2024",
+                content: "\n - Led a team of 20 individuals in various domains including development, event organization, workshops, and technical education, fostering collaboration and achieving successful outcomes.\n - Created Personalized Event Websites, resulting in the onboarding of nearly 500 participants and providing them with an engaging experience.\n - Developed a CTF cum Quiz platform, hosting a contest for 280 + participants simultaneously, showcasing the ability to handle large - scale events and deliver exceptional user experiences.\n - Impacted over 1k + students by offering valuable resources and support, and also taught programming languages, Data Structures & Algorithms, and technologies like React, Solidity, Git / GitHub to 350 + students, equipping them with essential skills for success in the tech industry.",
                 link: "https://www.linkedin.com/company/iodump01/"
             },
             {
@@ -487,9 +488,9 @@
                 type: "proj",
                 x: 2500, y: -500,
                 color: '#e74c3c', size: 130,
-                req: 'python', cost: 10,
+                req: 'python', cost: 5,
                 meta: "AI Puzzle Game",
-                content: "2D adventure game featuring an AI agent navigating a logic-based puzzle environment.",
+                content: "\n- Built a grid-based adventure game in Godot where players navigate a dangerous maze to find a hidden potion.\n- Programmed a sensor system that gives players clues like breezes near pits or stenches near monsters to help them move safely.\n- Designed custom game logic for movement, limited-use combat (knives), and victory conditions using Godot's scripting engine.xxImplemented interactive UI features such as shimmer effects and state resets to make the text-based gameplay more immersive.",
                 link: "https://ganimtron10.itch.io/wumpusworld"
             },
             {
@@ -498,8 +499,8 @@
                 x: -1000, y: 2000,
                 color: '#00599c', size: 140,
                 req: 'cpp', cost: 20,
-                meta: "Optimized Compiler (C++)",
-                content: "High-performance compiler and REPL with instruction aggregation and pattern-matching.",
+                meta: "Compiler Design",
+                content: "\n- Developed a high-speed interpreter in Go that converts Brainf**k source code into an optimized intermediate format for faster execution.\n- Built a custom Virtual Machine with 300,000 memory cells and a bytecode engine to run instructions more efficiently than standard line-by-line tools.\n- Implemented smart optimizations like Instruction Aggregation, which shrinks repeated commands (like ++++++) into a single step to save processing time.\n- Engineered a jump-mapping system that pre-matches brackets during compilation, allowing the program to skip instantly to the correct loop destination.",
                 link: "https://github.com/ganimtron-10/bf-compiler"
             },
 
@@ -509,8 +510,9 @@
                 type: "exp",
                 x: -3500, y: -3000,
                 color: '#f1c40f', size: 170,
-                meta: "Contributor | 2022 & 2023",
-                content: "Built core UI components (Spinbox, TreeUI) for scientific visualizer. Improved test coverage by 10%.",
+                req: 'python', cost: 15,
+                meta: "Contributor @ FURY | 2022 & 2023",
+                content: "\n - Being a Python Software Foundation contributor, I worked on an open-source research project called FURY which lies in the domain of scientific visualization and has a userbase of over 1.5k + users.\n - Developed an all - inclusive component called DrawPanel, enabling researchers and students to draw and visualize complex geometrical objects and various molecular structures.\n - Implemented 8 different modes for creating primitive objects, allowing users to easily manipulate and group / ungroup them along with a freehand mode, providing the flexibility to draw custom shapes and designs.\n - Significantly improved test coverage by 10 % through the creation and updating of unit tests, ensuring the stability and reliability of the software.\n - Collaborated to add 4 new UI components i.e.TreeUI, SpinBoxUI, CardUI, FileDialog and refactored a core element, which served as the foundation for all other UI components.\n - Additionally, I raised over 25 + PRs each having an average of 200 + lines of code to add new features and to fix few critical bugs to meet the evolving project requirements.",
                 link: "https://fury.gl"
             },
             {
@@ -518,8 +520,9 @@
                 type: "exp",
                 x: 4500, y: 4000,
                 color: '#2ecc71', size: 180,
+                req: 'python', cost: 10,
                 meta: "FinTech | 2023",
-                content: "Led integration for SaaS billing with Netsuite and Stripe. Reduced test time by 2.15m via async mocking.",
+                content: "\n - Headed Integration Development at an early-staged Fintech SaaS, which provides automated solutions for complex billing problems.\n - Worked with 6 connectors Netsuite, Salesforce, Hubspot, Xero, QuickBooks, and Stripe to handle a smooth Two - way Customer and Journal Entry Sync.\n - Helped onboard 2 clients as Salesforce CRM integration was the main onboarding requirement.\n - Migrated all synchronous unit tests to relevant asynchronous fully mocked unit tests, which reduced the overall test execution time by 2.15 minutes.",
                 link: "https://zenskar.com"
             },
             {
@@ -527,9 +530,9 @@
                 type: "proj",
                 x: 5500, y: -2500,
                 color: '#d82c20', size: 150,
-                req: 'redis', cost: 12,
-                meta: "Storage Engine (Go/Redis)",
-                content: "Log-structured KV store featuring append-only storage and in-memory indexing.",
+                req: 'redis', cost: 8,
+                meta: "Storage Engine",
+                content: "\n - Built a key-value store in Go based on the Bitcask design, focusing on fast writes and reliable data retrieval.\n - Implemented append-only storage to ensure high speed by writing all new data to the end of a file instead of overwriting existing blocks.\n - Developed an in-memory indexing system(KeyDir) that maps keys to their exact file locations, allowing for near instant data lookups.\n - Engineered an automatic crash recovery feature that rebuilds the entire database index from the data file whenever the system starts up.",
                 link: "https://github.com/ganimtron-10/bitcask"
             },
             {
@@ -538,8 +541,8 @@
                 x: -5000, y: 2000,
                 color: '#f7df1e', size: 135,
                 req: 'js', cost: 5,
-                meta: "Diff Engine (JS)",
-                content: "Efficient sequence comparison implementation of the Myers diff algorithm in TypeScript.",
+                meta: "Diff Engine",
+                content: "\n - Built a fast text comparison tool in Go that finds the smallest possible number of changes needed to turn one file into another.\n - Used a graph-based search algorithm to map out differences between files, ensuring the most efficient 'edit script' is generated every time.\n - Added a backtracking feature to accurately reconstruct the step-by-step history of additions and deletions after finding the shortest path.\n - Designed a clean terminal interface with color-coded updates and automatic fixes for different Windows / Unix line endings.",
                 link: "https://github.com/ganimtron-10/myers-algo"
             },
             {
@@ -548,8 +551,8 @@
                 x: -2000, y: 4000,
                 color: '#2496ed', size: 145,
                 req: 'docker', cost: 10,
-                meta: "Containerized Engine",
-                content: "Content-aware resizing engine containerized for scalable image processing tasks.",
+                meta: "Context aware Resizing",
+                content: "\n- Developed an image resizing tool in Go that shrinks photos without stretching or cropping the important subjects.\n- Used Seam Carving logic to find and remove paths of unimportant pixels (low-energy seams) from top to bottom.\n- Boosted performance using Go routines to calculate pixel importance across multiple CPU cores at the same time.\n- Built a batch-processing mode that deletes multiple pixel paths at once, making it much faster to resize high-quality images.",
                 link: "https://github.com/ganimtron-10/seam-carving"
             },
 
@@ -559,8 +562,9 @@
                 type: "exp",
                 x: 8000, y: -5000,
                 color: '#3498db', size: 200,
-                meta: "Associate DevOps Engineer | Present",
-                content: "Automated Azure pipelines for image scanning. Developed 13+ scripts and managed Salesforce via Copado.",
+                req: 'azure', cost: 20,
+                meta: "DevOps Engineer | Present",
+                content: "\n - Created and refined Azure Pipelines to maintain and automate Application Release using Helm, Daily Docker Image Scanning, Purging older databases, Environment-based Porting, CI/CD for auto test reporting.\n - Developed and deployed 28 automation scripts and APIs in Python, Go and JavaScript to optimize manual and repetitive tasks to increase productivity.\n - Implemented an End-to-End Redirection handler tool to configure and manage redirection endpoints, providing a unified interface for streamlining access and management.\n - Worked as Salesforce Admin, picking up initiatives including Change Porting from Lower to Higher Environments and backportings using Copado Release Manager, ensuring seamless deployment procedures",
                 link: "https://ptc.com"
             },
             {
@@ -570,7 +574,7 @@
                 color: '#8e44ad', size: 160,
                 req: 'distributed', cost: 20,
                 meta: "Distributed File System",
-                content: "High-performance DFS for tiny files with distributed metadata and erasure coding.",
+                content: "\n - Created a Distributed File System (DFS) in Go from scratch specifically optimized to handle tiny files (<64KB) that usually overwhelm traditional storage.\n - Designed a Data Packing strategy that bundles small files into larger 50MB blocks, eliminating the storage waste and fragmentation found in standard systems.\n - Implemented a Distributed Metadata Service to prevent performance bottlenecks, allowing the system to scale horizontally as more files are added.\n - Built advanced reliability features including Erasure Coding for fault tolerance, Copy- on - Write for safe updates, and background Garbage Collection to reclaim space.",
                 link: "https://github.com/ganimtron-10/TriFS"
             },
             {
@@ -579,8 +583,8 @@
                 x: -9000, y: -8000,
                 color: '#00add8', size: 155,
                 req: 'go', cost: 15,
-                meta: "Kafka-inspired System",
-                content: "Messaging system built from scratch implementing core Kafka protocol APIs and TCP communication.",
+                meta: "Kafka-inspired Messaging System",
+                content: "\n - Built a custom Kafka broker in Go from scratch to master the binary protocol and understand how high-throughput messaging works under the hood.\n - Developed a concurrent TCP server that manages multiple client connections simultaneously, using custom parsers for binary-encoded Kafka requests.\n - Implemented key Kafka APIs including ApiVersions, DescribeTopicPartitions, and the Fetch API to allow clients to discover cluster layouts and consume messages.\n - Integrated live- reloading and modular project architecture, separating API logic, protocol parsing, and server management for rapid development and testing.",
                 link: "https://github.com/ganimtron-10/akfak"
             },
             {
@@ -588,9 +592,9 @@
                 type: "proj",
                 x: 6000, y: 7000,
                 color: '#0089d6', size: 150,
-                req: 'azure', cost: 15,
-                meta: "Cloud Sim Platform",
-                content: "Platform for testing and visualizing complex algorithms, deployed via Azure Pipelines.",
+                req: 'js', cost: 15,
+                meta: "Simulator & Visualization Platform",
+                content: "\n - Developed an interactive visualization tool that breaks down complex computer science algorithms into step-by-step visual experiences.\n - Built a custom simulation engine that allows users to pause, play, and manually step through code execution to see exactly how data changes.\n - Implemented adjustable playback controls, enabling users to toggle simulation speeds or freeze frames to study specific under the hood logic.\n - Designed flexible input features that support both manual data entry and random pattern generation for real time testing of various edge cases.",
                 link: "https://ganimtron-10.is-a.dev/sutras/"
             }
         ];
