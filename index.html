@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arcade Hub</title>
+    <title>ganimverse</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
     <style>
         body {
@@ -157,12 +157,12 @@
             textStyle(BOLD);
             drawingContext.shadowBlur = 15;
             drawingContext.shadowColor = 'rgba(255, 255, 255, 0.5)';
-            text("GAME SELECTION", width / 2, 60);
+            text("ganimverse", width / 2, 60);
             drawingContext.shadowBlur = 0;
 
             fill(200, 200, 255, 150 + flicker);
             textSize(14);
-            text("SPEND TIME TO START", width / 2, 100);
+            text("GAME SELECTION", width / 2, 100);
 
             stroke(255, 50);
             line(width * 0.2, 120, width * 0.8, 120);
@@ -324,7 +324,7 @@
 
             setTimeout(() => {
                 console.log("Redirecting to: " + game.path);
-                window.location.href = game.path;
+                window.location.href = window.location.pathname + game.path;
                 // alert("LAUNCHING: " + game.title);
                 document.body.style.filter = "none";
             }, 300);
