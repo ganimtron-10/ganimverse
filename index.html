@@ -78,6 +78,12 @@
 
             { "title": "SPACE EXPLORER", "icon": "🚀", "color": "#9370DB", "path": "/space-explorer" },
             { "title": "STRAFI", "icon": "💰", "color": "#00CED1", "path": "/strafi" },
+            { "title": "GODFATHER", "icon": "🐺", "color": "#FF4500", "path": "https://godfather-mafia.vercel.app/" },
+            { "title": "WHOSPY", "icon": "🕵️", "color": "#FFD700", "path": "https://whospy.vercel.app/" },
+            { "title": "TDLE", "icon": "📝", "color": "#32CD32", "path": "https://tvia.vercel.app/" },
+            { "title": "WUMPUS WORLD", "icon": "👹", "color": "#8B4513", "path": "https://ganimtron10.itch.io/wumpusworld" },
+            { "title": "SURVIVE THIS", "icon": "⌛", "color": "#00FF00", "path": "https://ganimtron10.itch.io/survivethis" },
+            { "title": "PANCHATATVA", "icon": "🌏", "color": "#F0E68C", "path": "https://ganimtron10.itch.io/panchatatva" },
             { "title": "COMING SOON", "icon": "🔒", "color": "#444444", "path": "#", "disabled": true }
         ];
 
@@ -338,7 +344,11 @@
 
             setTimeout(() => {
                 console.log("Redirecting to: " + game.path);
-                window.location.href = window.location.pathname + game.path;
+                if (game.path.startsWith("http")) {
+                    window.open(game.path, "_self");
+                } else {
+                    window.location.href = window.location.pathname + game.path;
+                }
                 // alert("LAUNCHING: " + game.title);
                 document.body.style.filter = "none";
             }, 300);
